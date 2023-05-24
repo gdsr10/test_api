@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from api.views import Login, CredentialUpdate, SidebarList, PaymentModule, ItemNumberList, FollowUp
+from api.views import Login, CredentialUpdate, SidebarList, PaymentModule, ItemNumberList, FollowUp, Predictor, Clinical
 
 
 urlpatterns = [
@@ -38,5 +38,11 @@ urlpatterns = [
     
     # API to post/FollowUpView Scheme
     path('api/followup/', FollowUp.FollowUpView.as_view()),
+    
+    # API to post/PredictorView Scheme
+    path('api/predictor/', Predictor.PredictorView.as_view()),
+    
+    # API to post/PredictorView Scheme
+    path('api/clinicaldata/', Clinical.ClinicalView.as_view()),
     
 ]

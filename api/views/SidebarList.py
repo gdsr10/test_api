@@ -10,9 +10,9 @@ class SidebarListView(views.APIView):
     def post(self, request):
         """ POST method handler to add SidebarListView
         """
-        LOCATIONID = request.data.get('LOCATIONID')
-        APTDATE = request.data.get('APTDATE')
-        USERID = request.data.get('USERID')
+        LOCATIONID = request.data.get('location_id')
+        APTDATE = request.data.get('aptdate')
+        USERID = request.data.get('user_id')
         
         # APTDATE = "2023-05-09"
         # USERID = "39"

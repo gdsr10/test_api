@@ -34,8 +34,8 @@ class LoginView(views.APIView):
     def post(self, request):
         """ POST method handler to add EntryDetailsView
         """
-        MAILID = request.data.get('FIELD_MAILID')
-        PASSWORD = request.data.get('FIELD_PASSWORD')
+        MAILID = request.data.get('mail_id')
+        PASSWORD = request.data.get('password')
         
         # print(MAILID)
         # print(PASSWORD)

@@ -10,10 +10,10 @@ class PaymentModuleView(views.APIView):
     def post(self, request):
         """ POST method handler to add PaymentModuleView
         """
-        LOCATIONID = request.data.get('LOCATIONID')
-        FROMDATE = request.data.get('FROMDATE')
-        TODATE = request.data.get('TODATE')
-        USERID = request.data.get('USERID')
+        LOCATIONID = request.data.get('location_id')
+        FROMDATE = request.data.get('fromdate')
+        TODATE = request.data.get('todate')
+        USERID = request.data.get('user_id')
         
         # APTDATE = "2023-05-09"
         # USERID = "39"

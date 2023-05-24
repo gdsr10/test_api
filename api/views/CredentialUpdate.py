@@ -18,9 +18,9 @@ class CredentialUpdateView(views.APIView):
         """ PUT method handler to update Employee data
         """
         
-        UserID = request.data.get('ID')
-        MAILID = request.data.get('FIELD_MAILID')
-        PASSWORD = request.data.get('FIELD_PASSWORD')
+        UserID = request.data.get('id')
+        MAILID = request.data.get('mail_id')
+        PASSWORD = request.data.get('password')
         
         # print(UserID)
         # print(MAILID)
