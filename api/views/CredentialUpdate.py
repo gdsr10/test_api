@@ -18,39 +18,53 @@ class CredentialUpdateView(views.APIView):
         """ PUT method handler to update Employee data
         """
         
-        UserID = request.data.get('id')
-        MAILID = request.data.get('mail_id')
-        PASSWORD = request.data.get('password')
+        headervalue = request.META.get('HTTP_VALIDATE')
         
-        # print(UserID)
-        # print(MAILID)
-        # print(PASSWORD)
+        if headervalue == "":
+            return JsonResponse({'Message': 'Authenticate Empty','Status':401, 'Success': 'False'}, status=401)
         
-        with connection.cursor() as cursor:
-            # Execute an SQL query to check if the user exists and meets a condition
-            cursor.execute("SELECT * FROM admin_users WHERE id = %s", [UserID])
-            user = cursor.fetchone()
+        
+        if headervalue == "y2s4pyj52nzr49jnuxxgqk5jtj28cj":
+            
+            UserID = request.data.get('id')
+            MAILID = request.data.get('mail_id')
+            PASSWORD = request.data.get('password')
+            
+            # print(UserID)
+            # print(MAILID)
+            # print(PASSWORD)
+            
+            with connection.cursor() as cursor:
+                # Execute an SQL query to check if the user exists and meets a condition
+                cursor.execute("SELECT * FROM admin_users WHERE id = %s", [UserID])
+                user = cursor.fetchone()
 
-            if user:
-                # Perform the condition check here
-                if user[0]:
-                    # Execute an SQL query to update the user data
-                    cursor.execute("UPDATE admin_users SET FIELD_MAILID = %s, FIELD_PASSWORD = %s WHERE ID = %s", [MAILID, PASSWORD, UserID])
+                if user:
+                    # Perform the condition check here
+                    if user[0]:
+                        # Execute an SQL query to update the user data
+                        cursor.execute("UPDATE admin_users SET FIELD_MAILID = %s, FIELD_PASSWORD = %s WHERE ID = %s", [MAILID, PASSWORD, UserID])
 
-                    # Return a success message
-                    data = {
-                        'Message': 'User data updated successfully',
-                        'Status':200,
-                        'Success': 'True',
-                        'data': [{
-                               'Mail Id': user[2],
-                                'Password': user[4]
-                            }
-                        ]
-                    }
-                    return JsonResponse(data)
+                        # Return a success message
+                        data = {
+                            'Message': 'User data updated successfully',
+                            'Status':200,
+                            'Success': 'True',
+                            'data': [
+                                {
+                                    'MailId': user[2],
+                                    'Password': user[4]
+                                }
+                            ]
+                        }
+                        return JsonResponse(data)
+                    else:
+                        return JsonResponse({'Message': 'User is not active'}, status=400)
                 else:
-                    return JsonResponse({'Message': 'User is not active'}, status=400)
-            else:
-                return JsonResponse({'Message': 'User not found', 'Status':404, 'Success': 'False', 'data':[]}, status=404)
+                    return JsonResponse({'Message': 'User not found', 'Status':404, 'Success': 'False', 'data':[]}, status=404)
+            
+        else:
+            return JsonResponse({'Message': 'Authenticate Failed', 'Status':401, 'Success': 'False'}, status=401)
+        
+        
             

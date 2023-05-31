@@ -15,7 +15,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from api.views import Login, CredentialUpdate, SidebarList, PaymentModule, ItemNumberList, FollowUp, Predictor, Clinical
+# from rest_framework.authtoken.views import obtain_auth_token
+from api.views import Login, CredentialUpdate, SidebarList, PaymentModule
+from api.views import ItemNumberList, FollowUp, Predictor, Clinical, MtaRecord, Layout, KPIData, ForgotPassword, OTPVerify, Logout
 
 
 urlpatterns = [
@@ -44,5 +46,25 @@ urlpatterns = [
     
     # API to post/PredictorView Scheme
     path('api/clinicaldata/', Clinical.ClinicalView.as_view()),
+    
+    # API to post/MtaRecordView Scheme
+    path('api/mtarecord/', MtaRecord.MtaRecordView.as_view()),
+    
+    # API to post/MtaRecordView Scheme
+    path('api/layoutdata/', Layout.LayoutView.as_view()),
+    
+    # API to post/KPIDataView Scheme
+    path('api/kpidata/', KPIData.KPIDataView.as_view()),
+    
+    # API to post/ForgotPasswordView Scheme
+    path('api/forgotpassword/', ForgotPassword.ForgotPasswordView.as_view()),
+    
+    # API to post/OTPVerifyView Scheme
+    path('api/otpverify/', OTPVerify.OTPVerifyView.as_view()),
+    
+    # API to post/LogoutView Scheme
+    path('api/logout/', Logout.LogoutView.as_view()),
+    
+    # path('get-token/', obtain_auth_token)
     
 ]

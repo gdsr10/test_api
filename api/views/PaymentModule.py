@@ -10,57 +10,71 @@ class PaymentModuleView(views.APIView):
     def post(self, request):
         """ POST method handler to add PaymentModuleView
         """
-        LOCATIONID = request.data.get('location_id')
-        FROMDATE = request.data.get('fromdate')
-        TODATE = request.data.get('todate')
-        USERID = request.data.get('user_id')
         
-        # APTDATE = "2023-05-09"
-        # USERID = "39"
+        headervalue = request.META.get('HTTP_VALIDATE')
         
-        # print(MAILID)
-        # print(PASSWORD)
+        if headervalue == "":
+            return JsonResponse({'Message': 'Authenticate Empty','Status':401, 'Success': 'False'}, status=401)
         
-        with connection.cursor() as cursor:
-            # Execute an SQL query to fetch the user with matching credentials
-            query = f"SELECT ( SELECT B.LOCATIONNAME FROM locationdetails B WHERE B.LOCATIONID = A.LOCATIONID ) AS ana_location , SUM( A.PAID_PRIVATE ) as PRIVATE , SUM( A.PAID_MEDICARE ) as MEDICARE , SUM( A.PAID_DVA ) as DVA , SUM( A.PAID_OTHERS ) as OTHERS , SUM( A.PAID_GST ) as GST , SUM( A.PAID_TOTAL ) as TOTAL,A.USERID FROM analytics_{LOCATIONID} A WHERE A.ANADATE >= '{FROMDATE}' AND A.ANADATE <= '{TODATE}' AND A.USERID = {USERID}"
-            # print(query)
-            cursor.execute(query)
-            # cursor.execute(query, [FROMDATE, TODATE, USERID])
+        
+        if headervalue == "y2s4pyj52nzr49jnuxxgqk5jtj28cj":
             
-            # print(cursor.execute(query, [FROMDATE, TODATE, USERID]))
+            LOCATIONID = request.data.get('location_id')
+            FROMDATE = request.data.get('fromdate')
+            TODATE = request.data.get('todate')
+            USERID = request.data.get('user_id')
             
-            # Fetch the first row from the cursor
-            rows = cursor.fetchall()
+            # APTDATE = "2023-05-09"
+            # USERID = "39"
             
-            # print(rows)
+            # print(MAILID)
+            # print(PASSWORD)
             
-        if rows:
-            # Successful login
-            data = []
-            
-            for row in rows:
-                row_data = {
-                    'ANA_LOCATION': row[2],
-                    'PRIVATE': row[1],
-                    'MEDICARE': row[2],
-                    'DVA': row[3],
-                    'OTHERS': row[4],
-                    'GST': row[5],
-                    'TOTAL': row[6],
-                    'USERID': row[7],
-                }
-                data.append(row_data)
+            with connection.cursor() as cursor:
+                # Execute an SQL query to fetch the user with matching credentials
+                query = f"SELECT ( SELECT B.LOCATIONNAME FROM locationdetails B WHERE B.LOCATIONID = A.LOCATIONID ) AS ana_location , SUM( A.PAID_PRIVATE ) as PRIVATE , SUM( A.PAID_MEDICARE ) as MEDICARE , SUM( A.PAID_DVA ) as DVA , SUM( A.PAID_OTHERS ) as OTHERS , SUM( A.PAID_GST ) as GST , SUM( A.PAID_TOTAL ) as TOTAL,A.USERID FROM analytics_{LOCATIONID} A WHERE A.ANADATE >= '{FROMDATE}' AND A.ANADATE <= '{TODATE}' AND A.USERID = {USERID}"
+                # print(query)
+                cursor.execute(query)
+                # cursor.execute(query, [FROMDATE, TODATE, USERID])
+                
+                # print(cursor.execute(query, [FROMDATE, TODATE, USERID]))
+                
+                # Fetch the first row from the cursor
+                rows = cursor.fetchall()
+                
+                # print(rows)
+                
+            if rows:
+                # Successful login
+                data = []
+                
+                for row in rows:
+                    row_data = {
+                        'AnaLocation': row[2],
+                        'Private': row[1],
+                        'Medicare': row[2],
+                        'Dva': row[3],
+                        'Others': row[4],
+                        'Gst': row[5],
+                        'Total': row[6],
+                        'UserId': row[7],
+                    }
+                    data.append(row_data)
 
-            # Return the data as a JSON response
-            response = {
-                'Message': 'Payment Module Data',
-                'Status':200,
-                'Success': 'True',
-                'data': data
-            }
+                # Return the data as a JSON response
+                response = {
+                    'Message': 'Payment Module Data',
+                    'Status':200,
+                    'Success': 'True',
+                    'data': data
+                }
+                
+                return JsonResponse(response)
+            else:
+                # Invalid credentials
+                return JsonResponse({'Message': 'Payment Module Data Not Found', 'Status':404, 'Success': 'False', 'data': []}, status=404)
             
-            return JsonResponse(response)
         else:
-            # Invalid credentials
-            return JsonResponse({'Message': 'Invalid credentials', 'Status':401, 'Success': 'False', 'data': []}, status=401)
+            return JsonResponse({'Message': 'Authenticate Failed', 'Status':401, 'Success': 'False'}, status=401)
+        
+        

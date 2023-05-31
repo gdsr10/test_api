@@ -10,54 +10,68 @@ class SidebarListView(views.APIView):
     def post(self, request):
         """ POST method handler to add SidebarListView
         """
-        LOCATIONID = request.data.get('location_id')
-        APTDATE = request.data.get('aptdate')
-        USERID = request.data.get('user_id')
         
-        # APTDATE = "2023-05-09"
-        # USERID = "39"
+        headervalue = request.META.get('HTTP_VALIDATE')
         
-        # print(MAILID)
-        # print(PASSWORD)
+        if headervalue == "":
+            return JsonResponse({'Message': 'Authenticate Empty','Status':401, 'Success': 'False'}, status=401)
         
-        with connection.cursor() as cursor:
-            # Execute an SQL query to fetch the user with matching credentials
-            query = f"SELECT PNTNAME,APTTIME,APPTID,HAD,MPD,MP,ID,PNTDOB FROM sidebar_{LOCATIONID} WHERE DATE(APTDATE) = '{APTDATE}' AND USERID = {USERID} AND RECORDSTATUS ='1' ORDER BY APTTIME"
-            print(query)
-            cursor.execute(query)
-            # cursor.execute(query, [APTDATE, USERID])
+        
+        if headervalue == "y2s4pyj52nzr49jnuxxgqk5jtj28cj":
             
-            # print(cursor.execute(query, [APTDATE, USERID]))
+            LOCATIONID = request.data.get('location_id')
+            APTDATE = request.data.get('aptdate')
+            USERID = request.data.get('user_id')
             
-            # Fetch the first row from the cursor
-            rows = cursor.fetchall()
+            # APTDATE = "2023-05-09"
+            # USERID = "39"
             
-        if rows:
-            # Successful login
-            data = []
+            # print(MAILID)
+            # print(PASSWORD)
             
-            for row in rows:
-                row_data = {
-                    'PNTNAME': row[0],
-                    'APTTIME': row[1],
-                    'APPTID': row[2],
-                    'HAD': row[3],
-                    'MPD': row[4],
-                    'MP': row[5],
-                    'ID': row[6],
-                    'PNTDOB': row[7],
-                }
-                data.append(row_data)
+            with connection.cursor() as cursor:
+                # Execute an SQL query to fetch the user with matching credentials
+                query = f"SELECT PNTNAME,APTTIME,APPTID,HAD,MPD,MP,ID,PNTDOB FROM sidebar_{LOCATIONID} WHERE DATE(APTDATE) = '{APTDATE}' AND USERID = {USERID} AND RECORDSTATUS ='1' ORDER BY APTTIME"
+                print(query)
+                cursor.execute(query)
+                # cursor.execute(query, [APTDATE, USERID])
+                
+                # print(cursor.execute(query, [APTDATE, USERID]))
+                
+                # Fetch the first row from the cursor
+                rows = cursor.fetchall()
+                
+            if rows:
+                # Successful login
+                data = []
+                
+                for row in rows:
+                    row_data = {
+                        'PntName': row[0],
+                        'AptTime': row[1],
+                        'ApptId': row[2],
+                        'Had': row[3],
+                        'Mpd': row[4],
+                        'Mp': row[5],
+                        'Id': row[6],
+                        'PntDob': row[7],
+                    }
+                    data.append(row_data)
 
-            # Return the data as a JSON response
-            response = {
-                'Message': 'Sidebar List Data',
-                'Status':200,
-                'Success': 'True',
-                'data': data
-            }
+                # Return the data as a JSON response
+                response = {
+                    'Message': 'Sidebar List Data',
+                    'Status':200,
+                    'Success': 'True',
+                    'data': data
+                }
+                
+                return JsonResponse(response)
+            else:
+                # Invalid credentials
+                return JsonResponse({'Message': 'Sidebar Data Not Found', 'Status':404, 'Success': 'False', 'data': []}, status=404)
             
-            return JsonResponse(response)
         else:
-            # Invalid credentials
-            return JsonResponse({'Message': 'No Data Found', 'Status':404, 'Success': 'False', 'data': []}, status=404)
+            return JsonResponse({'Message': 'Authenticate Failed', 'Status':401, 'Success': 'False'}, status=401)
+        
+        
