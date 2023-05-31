@@ -14,7 +14,7 @@ from django.http import JsonResponse
 class CredentialUpdateView(views.APIView):
     """ API view to add login Data """
     
-    def put(self, request):
+    def post(self, request):
         """ PUT method handler to update Employee data
         """
         

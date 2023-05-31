@@ -11,7 +11,7 @@ import requests
 class MtaRecordView(views.APIView):
     """ API view to Sidebar List records Data """
     
-    def put(self, request):
+    def post(self, request):
         """ PUT method handler to update Employee data
         """
         # headers1 = {key: value for key, value in request.META.items() if key.startswith('HTTP_')}
