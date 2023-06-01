@@ -4,6 +4,8 @@ from rest_framework import views
 from django.db import connection
 from django.http import JsonResponse
 
+from datetime import datetime, timedelta
+
 class ClinicalView(views.APIView):
     """ API view to Sidebar List records Data """
     
@@ -16,6 +18,14 @@ class ClinicalView(views.APIView):
             return JsonResponse({'Message': 'Authenticate Empty','Status':401, 'Success': 'False'}, status=401)
         
         if headervalue == "y2s4pyj52nzr49jnuxxgqk5jtj28cj":
+            
+            # Get the current date
+            current_date = datetime.now().date()
+            
+            # Calculate the date one year ago
+            one_year_ago = current_date - timedelta(days=365)
+            
+            # print(one_year_ago.strftime("%Y-%m-%d"))
             
             LOCATIONID = request.data.get('location_id')
             ID = request.data.get('id')
@@ -72,6 +82,117 @@ class ClinicalView(views.APIView):
                             Date_721 = ITEMNO_str5
                             Date_723 = ITEMNO_str6
                             Date_732 = ITEMNO_str7
+                            
+                            # dates = [Date_701, Date_703, Date_705,Date_707,Date_721,Date_723,Date_732]
+                            # print(dates)
+                            
+                            ITLastDate = ""
+                            
+                            if Date_701 == "":
+                                ITLastDate = ""
+                            else:
+                                IT_from_date_str = one_year_ago.strftime("%Y-%m-%d")
+                                IT_from_date = datetime.strptime(IT_from_date_str, "%Y-%m-%d")
+                                IT_to_date1 = datetime.strptime(Date_701, "%Y-%m-%d")
+                                difference11 = IT_from_date - IT_to_date1
+                                if difference11 <= timedelta(days=365):
+                                    ITLastDate = Date_701
+                                else:
+                                    ITLastDate += "|" + ""
+
+                                    
+                            if Date_703 == "":
+                                ITLastDate += "|" + ""
+                            else:
+                                IT_from_date_str = one_year_ago.strftime("%Y-%m-%d")
+                                IT_from_date = datetime.strptime(IT_from_date_str, "%Y-%m-%d")
+                                IT_to_date2 = datetime.strptime(Date_703, "%Y-%m-%d")
+                                difference12 = IT_from_date - IT_to_date2
+                                if difference12 <= timedelta(days=365):
+                                    ITLastDate += "|" + Date_703
+                                else:
+                                    ITLastDate += "|" + ""
+                                    
+                                    
+                            if Date_705 == "":
+                                ITLastDate += "|" + ""
+                            else:
+                                IT_from_date_str = one_year_ago.strftime("%Y-%m-%d")
+                                IT_from_date = datetime.strptime(IT_from_date_str, "%Y-%m-%d")
+                                IT_to_date3 = datetime.strptime(Date_705, "%Y-%m-%d")
+                                difference13 = IT_from_date - IT_to_date3
+                                if difference13 <= timedelta(days=365):
+                                    ITLastDate += "|" + Date_705
+                                else:
+                                    ITLastDate += "|" + ""
+                                
+                                    
+                            if Date_707 == "":
+                                ITLastDate += "|" + ""
+                            else:
+                                IT_from_date_str = one_year_ago.strftime("%Y-%m-%d")
+                                IT_from_date = datetime.strptime(IT_from_date_str, "%Y-%m-%d")
+                                IT_to_date4 = datetime.strptime(Date_707, "%Y-%m-%d")
+                                difference14 = IT_from_date - IT_to_date4
+                                if difference14 <= timedelta(days=365):
+                                    ITLastDate += "|" + Date_707
+                                else:
+                                    ITLastDate += "|" + ""
+                                    
+                                    
+                            if Date_721 == "":
+                                ITLastDate += "|" + ""
+                            else:
+                                IT_from_date_str = one_year_ago.strftime("%Y-%m-%d")
+                                IT_from_date = datetime.strptime(IT_from_date_str, "%Y-%m-%d")
+                                IT_to_date5 = datetime.strptime(Date_721, "%Y-%m-%d")
+                                difference15 = IT_from_date - IT_to_date5
+                                if difference15 <= timedelta(days=365):
+                                    ITLastDate += "|" + Date_721
+                                else:
+                                    ITLastDate += "|" + ""
+
+                                    
+                            if Date_723 == "":
+                                ITLastDate += "|" + ""
+                            else:
+                                IT_from_date_str = one_year_ago.strftime("%Y-%m-%d")
+                                IT_from_date = datetime.strptime(IT_from_date_str, "%Y-%m-%d")
+                                # print(IT_from_date)
+                                IT_to_date6 = datetime.strptime(Date_723, "%Y-%m-%d")
+                                # print(IT_to_date6)
+                                difference16 = IT_from_date - IT_to_date6
+                                # print(difference16)
+                                if difference16 <= timedelta(days=365):
+                                    ITLastDate += "|" + Date_723
+                                else:
+                                    ITLastDate += "|" + ""
+                                    
+                                    
+                            if Date_732 == "":
+                                ITLastDate += "|" + ""
+                            else:
+                                IT_from_date_str = one_year_ago.strftime("%Y-%m-%d")
+                                IT_from_date = datetime.strptime(IT_from_date_str, "%Y-%m-%d")
+                                IT_to_date7 = datetime.strptime(Date_732, "%Y-%m-%d")
+                                difference17 = IT_from_date - IT_to_date7
+                                if difference17 <= timedelta(days=365):
+                                    ITLastDate += "|" + Date_732
+                                else:
+                                    ITLastDate += "|" + ""
+                            
+                            dates_arr = ITLastDate.split("|")
+                            dates_arr = [x for x in dates_arr if x != '']
+                            dates = [datetime.strptime(date_str, "%Y-%m-%d").date() for date_str in dates_arr]
+                            recent_date = max(dates)
+                            # index = dates.index(recent_date)
+                            
+                            ITLastDate = recent_date
+                            
+                            print(dates_arr)
+                            print(recent_date)
+                            # print(index)
+                            
                             # End ITEMNO split and check condition
                 
                 
@@ -92,6 +213,18 @@ class ClinicalView(views.APIView):
                             Systolic = BLOODPRESSURE_str1_split_1
                             Diastolic = BLOODPRESSURE_str1_split_2
                             BLOODPRESSUREDate = BLOODPRESSURE_str2
+                            # print(BLOODPRESSUREDate)
+                            # BPLastDate = ""
+                            BP_from_date_str = one_year_ago.strftime("%d-%m-%Y")
+                            BP_from_date = datetime.strptime(BP_from_date_str, "%d-%m-%Y")
+                            BP_to_date = datetime.strptime(BLOODPRESSUREDate, "%d-%m-%Y")
+                            # Calculate the difference between the dates
+                            difference2 = BP_from_date - BP_to_date
+                            # Check if the difference is less than or equal to 365 days
+                            if difference2 <= timedelta(days=365):
+                                BPLastDate = BLOODPRESSUREDate
+                            else:
+                                BPLastDate = ""
                         # End BLOODPRESSURE split and check condition
                         
                         
@@ -113,6 +246,17 @@ class ClinicalView(views.APIView):
                             Weight = BMI_str2
                             BMI = BMI_str3
                             BMIDate = BMI_str4
+                            BMI_from_date_str = one_year_ago.strftime("%d-%m-%Y")
+                            BMI_from_date = datetime.strptime(BMI_from_date_str, "%d-%m-%Y")
+                            BMI_to_date = datetime.strptime(BMIDate, "%d-%m-%Y")
+                            # Calculate the difference between the dates
+                            difference3 = BMI_from_date - BMI_to_date
+                            # print(difference)
+                            # Check if the difference is less than or equal to 365 days
+                            if difference3 <= timedelta(days=365):
+                                BMILastDate = BMIDate
+                            else:
+                                BMILastDate = ""
                         # End BMI split and check condition
                         
                         
@@ -129,6 +273,18 @@ class ClinicalView(views.APIView):
                             GLUCOSE_str2 = GLUCOSE_str_arr[1]
                             Glucose = GLUCOSE_str1
                             GLUCOSEDate = GLUCOSE_str2
+                            # print(GLUCOSEDate)
+                            GL_from_date_str = one_year_ago.strftime("%d-%m-%Y")
+                            GL_from_date = datetime.strptime(GL_from_date_str, "%d-%m-%Y")
+                            GL_to_date = datetime.strptime(GLUCOSEDate, "%d-%m-%Y")
+                            # Calculate the difference between the dates
+                            difference4 = GL_from_date - GL_to_date
+                            # print(difference4)
+                            # Check if the difference is less than or equal to 365 days
+                            if difference4 <= timedelta(days=365):
+                                GLLastDate = GLUCOSEDate
+                            else:
+                                GLLastDate = ""
                         # End GLUCOSE split and check condition
                         
                         
@@ -144,6 +300,18 @@ class ClinicalView(views.APIView):
                             HBA1C_str2 = HBA1C_str_arr[1]
                             HBA1C = HBA1C_str1
                             HBA1CDate = HBA1C_str2
+                            # print(HBA1CDate)
+                            HB_from_date_str = one_year_ago.strftime("%d-%m-%Y")
+                            HB_from_date = datetime.strptime(HB_from_date_str, "%d-%m-%Y")
+                            HB_to_date = datetime.strptime(HBA1CDate, "%d-%m-%Y")
+                            # Calculate the difference between the dates
+                            difference5 = HB_from_date - HB_to_date
+                            # print(difference5)
+                            # Check if the difference is less than or equal to 365 days
+                            if difference5 <= timedelta(days=365):
+                                HBLastDate = HBA1CDate
+                            else:
+                                HBLastDate = ""
                         # End HBA1C split and check condition
                         
                         
@@ -171,6 +339,18 @@ class ClinicalView(views.APIView):
                             Triglyceride = CHELOSTROL_str4
                             Ratio = CHELOSTROL_str5
                             CHELOSTROLDate = CHELOSTROL_str6
+                            # print(CHELOSTROLDate)
+                            CH_from_date_str = one_year_ago.strftime("%d-%m-%Y")
+                            CH_from_date = datetime.strptime(CH_from_date_str, "%d-%m-%Y")
+                            CH_to_date = datetime.strptime(CHELOSTROLDate, "%d-%m-%Y")
+                            # Calculate the difference between the dates
+                            difference6 = CH_from_date - CH_to_date
+                            # print(difference6)
+                            # Check if the difference is less than or equal to 365 days
+                            if difference6 <= timedelta(days=365):
+                                CHLastDate = CHELOSTROLDate
+                            else:
+                                CHLastDate = ""
                         # End CHELOSTROL split and check condition
                         
                         
@@ -228,25 +408,30 @@ class ClinicalView(views.APIView):
                                 "721" : Date_721,
                                 "723" : Date_723,
                                 "732" : Date_732,
+                                "lastDate": ITLastDate,
                             },
                             'BloodPressure': {
                                 "Systolic" : Systolic,
                                 "Diastolic" : Diastolic,
                                 "Date" : BLOODPRESSUREDate,
+                                "lastDate": BPLastDate,
                             },
                             'Bmi': {
                                 "Height" : Height,
                                 "Weight" : Weight,
                                 "BMI" : BMI,
                                 "Date" : BMIDate,
+                                "lastDate": BMILastDate,
                             },
                             'Glucose': {
                                 "Glucose" : Glucose,
                                 "Date" : GLUCOSEDate,
+                                "lastDate": GLLastDate,
                             },
                             'Hba1c': {
                                 "HBA1C" : HBA1C,
                                 "Date" : HBA1CDate,
+                                "lastDate": HBLastDate,
                             },
                             'Cholestrol': {
                                 "Cholestrol" : Cholestrol,
@@ -255,6 +440,7 @@ class ClinicalView(views.APIView):
                                 "Triglyceride" : Triglyceride,
                                 "Ratio" : Ratio,
                                 "Date" : CHELOSTROLDate,
+                                "lastDate": CHLastDate,
                             },
                             'Alcohol': {
                                 "ALCOHOL" : ALCOHOL,

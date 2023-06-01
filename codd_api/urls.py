@@ -16,8 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 # from rest_framework.authtoken.views import obtain_auth_token
-from api.views import Login, CredentialUpdate, SidebarList, PaymentModule
-from api.views import ItemNumberList, FollowUp, Predictor, Clinical, MtaRecord, Layout, KPIData, ForgotPassword, OTPVerify, Logout
+from api.views import Login, CredentialUpdate, SidebarList, PaymentModule, ItemNumberList, FollowUp, Predictor
+from api.views import Clinical, MtaRecord, Layout, KPIData, ForgotPassword, OTPVerify, SentSms , ContactDetails , Logout
 
 
 urlpatterns = [
@@ -61,6 +61,12 @@ urlpatterns = [
     
     # API to post/OTPVerifyView Scheme
     path('api/otpverify/', OTPVerify.OTPVerifyView.as_view()),
+    
+    # API to post/SentSmsView Scheme
+    path('api/sentsms/', SentSms.SentSmsView.as_view()),
+    
+    # API to post/ContactDetailsView Scheme
+    path('api/contactdetails/', ContactDetails.ContactDetailsView.as_view()),
     
     # API to post/LogoutView Scheme
     path('api/logout/', Logout.LogoutView.as_view()),
