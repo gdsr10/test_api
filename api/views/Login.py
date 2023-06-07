@@ -19,23 +19,23 @@ class LoginView(views.APIView):
     # authentication_classes = [authentication.TokenAuthentication]
     # permission_classes = [permissions.IsAuthenticated]
     
-    def get(self, _):
-        """ GET method handler to add Employee data
-        """
-        with connection.cursor() as cursor:
-            # Execute a SQL query to fetch data from the table
-            cursor.execute("SELECT * FROM admin_users")
+    # def get(self, _):
+    #     """ GET method handler to add Employee data
+    #     """
+    #     with connection.cursor() as cursor:
+    #         # Execute a SQL query to fetch data from the table
+    #         cursor.execute("SELECT * FROM admin_users")
 
-            # Fetch all rows from the cursor
-            rows = cursor.fetchall()
+    #         # Fetch all rows from the cursor
+    #         rows = cursor.fetchall()
             
-            print(rows)
+    #         print(rows)
 
-        # Format the data as needed and return as JSON response
-        data = {
-            'user_details': rows,
-        }
-        return JsonResponse(data)
+    #     # Format the data as needed and return as JSON response
+    #     data = {
+    #         'user_details': rows,
+    #     }
+    #     return JsonResponse(data)
     
     
     def post(self, request):
@@ -50,7 +50,7 @@ class LoginView(views.APIView):
         
         if headervalue == "y2s4pyj52nzr49jnuxxgqk5jtj28cj":
             
-            MAILID = request.data.get('mail_id')
+            USERNAME = request.data.get('username')
             PASSWORD = request.data.get('password')
             
             Freetext = "login"
@@ -63,7 +63,7 @@ class LoginView(views.APIView):
             
             with connection.cursor() as cursor:
                 # Execute an SQL query to fetch the user with matching credentials
-                cursor.execute("SELECT * FROM admin_users WHERE FIELD_MAILID = %s AND FIELD_PASSWORD = %s", [MAILID, PASSWORD])
+                cursor.execute("SELECT * FROM admin_users WHERE FIELD_USERNAME = %s AND FIELD_PASSWORD = %s", [USERNAME, PASSWORD])
 
                 # Fetch the first row from the cursor
                 row = cursor.fetchone()
@@ -79,7 +79,7 @@ class LoginView(views.APIView):
                 
                     # Execute an SQL query to fetch the user with matching credentials
                     query = f"INSERT INTO admin_users_logs (USERID,USERNAME,DATETIME,ROLE,FREETEXT) VALUES ({UserID},'{UserName}','{Datetime}','{Role}','{Freetext}')"
-                    print(query)
+                    # print(query)
                     cursor.execute(query)
         
                 data = {
