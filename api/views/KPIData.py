@@ -42,11 +42,14 @@ class KPIDataView(views.APIView):
             
             def foo(secondss):
                 t = round(secondss)
-                hours = t // 3600
-                minutes = (t % 3600) // 60
-                seconds = t % 60
+                print(t)
+                hours = t / 3600
+                print(hours)
+                # minutes = (t % 3600) // 60
+                # seconds = t % 60
                 # return '{:02d}.{:02d}.{:02d}'.format(t//3600, t//60%60, t%60)
-                return hours * 10000 + minutes * 100 + seconds
+                # return hours * 10000 + minutes * 100 + seconds
+                return hours 
             
             def doctorhoursfun(fdate, tdate, locid, uid):
                 dochours = 0
@@ -57,6 +60,7 @@ class KPIDataView(views.APIView):
                     rows = cursor.fetchall()
                     if rows:
                         for row in rows:
+                            print(int(row[0]))
                             dochours += foo(int(row[0]))
                     return dochours
                 
@@ -114,23 +118,24 @@ class KPIDataView(views.APIView):
                         bookedapts = 0
                         
                     doctorhours += doctorhoursfun(FROMDATE, TODATE, LOCATIONID, USERID)
-                    
+                    print(doctorhours)
+                    print(int(totalfees))
                     if doctorhours > 0 :
-                        hourly_earning = totalfees / doctorhours
-                    
+                        hourly_earning = int(totalfees) / doctorhours
+                    print(hourly_earning)
                     perpatientaverage = userperpatientaverage(FROMDATE, TODATE, LOCATIONID, USERID)
                     
                     PotentialBilling = totalapts * perpatientaverage
                     
                     row_data = {
-                        'Bookedapts': bookedapts,
-                        'Totalfees': round(totalfees, 0),
-                        'Compapts': compapts,
+                        'Bookedapts': int(bookedapts),
+                        'Totalfees': int(round(totalfees, 0)),
+                        'Compapts': int(compapts),
                         'Ppavg': round(ppavg, 2),
-                        'Newpntcnt': newpatientcount,
-                        'Totalapts': totalapts,
-                        'Hourlyerng': round(hourly_earning, 0),
-                        'Potentialbllng': round(PotentialBilling, 0),
+                        'Newpntcnt': int(newpatientcount),
+                        'Totalapts': int(totalapts),
+                        'Hourlyerng': int(round(hourly_earning, 0)),
+                        'Potentialbllng': int(round(PotentialBilling, 0)),
                     }
                     data.append(row_data)
 

@@ -66,6 +66,7 @@ class ClinicalView(views.APIView):
                             Date_721 = ""
                             Date_723 = ""
                             Date_732 = ""
+                            ITLastDate = ""
                         else:
                             ITEMNO_str_arr = ITEMNO_str.split("#")
                             ITEMNO_str1 = ITEMNO_str_arr[0]
@@ -86,10 +87,12 @@ class ClinicalView(views.APIView):
                             # dates = [Date_701, Date_703, Date_705,Date_707,Date_721,Date_723,Date_732]
                             # print(dates)
                             
-                            ITLastDate = ""
+                            # ITLastDate = ""
+                            ITLastDate_lt = ""
                             
                             if Date_701 == "":
                                 ITLastDate = ""
+                                ITLastDate_lt = ""
                             else:
                                 IT_from_date_str = one_year_ago.strftime("%Y-%m-%d")
                                 IT_from_date = datetime.strptime(IT_from_date_str, "%Y-%m-%d")
@@ -103,6 +106,7 @@ class ClinicalView(views.APIView):
                                     
                             if Date_703 == "":
                                 ITLastDate += "|" + ""
+                                ITLastDate_lt += ""
                             else:
                                 IT_from_date_str = one_year_ago.strftime("%Y-%m-%d")
                                 IT_from_date = datetime.strptime(IT_from_date_str, "%Y-%m-%d")
@@ -116,6 +120,7 @@ class ClinicalView(views.APIView):
                                     
                             if Date_705 == "":
                                 ITLastDate += "|" + ""
+                                ITLastDate_lt += ""
                             else:
                                 IT_from_date_str = one_year_ago.strftime("%Y-%m-%d")
                                 IT_from_date = datetime.strptime(IT_from_date_str, "%Y-%m-%d")
@@ -129,6 +134,7 @@ class ClinicalView(views.APIView):
                                     
                             if Date_707 == "":
                                 ITLastDate += "|" + ""
+                                ITLastDate_lt += ""
                             else:
                                 IT_from_date_str = one_year_ago.strftime("%Y-%m-%d")
                                 IT_from_date = datetime.strptime(IT_from_date_str, "%Y-%m-%d")
@@ -142,6 +148,7 @@ class ClinicalView(views.APIView):
                                     
                             if Date_721 == "":
                                 ITLastDate += "|" + ""
+                                ITLastDate_lt += ""
                             else:
                                 IT_from_date_str = one_year_ago.strftime("%Y-%m-%d")
                                 IT_from_date = datetime.strptime(IT_from_date_str, "%Y-%m-%d")
@@ -155,6 +162,7 @@ class ClinicalView(views.APIView):
                                     
                             if Date_723 == "":
                                 ITLastDate += "|" + ""
+                                ITLastDate_lt += ""
                             else:
                                 IT_from_date_str = one_year_ago.strftime("%Y-%m-%d")
                                 IT_from_date = datetime.strptime(IT_from_date_str, "%Y-%m-%d")
@@ -171,6 +179,7 @@ class ClinicalView(views.APIView):
                                     
                             if Date_732 == "":
                                 ITLastDate += "|" + ""
+                                ITLastDate_lt += ""
                             else:
                                 IT_from_date_str = one_year_ago.strftime("%Y-%m-%d")
                                 IT_from_date = datetime.strptime(IT_from_date_str, "%Y-%m-%d")
@@ -180,6 +189,8 @@ class ClinicalView(views.APIView):
                                     ITLastDate += "|" + Date_732
                                 else:
                                     ITLastDate += "|" + ""
+                                    
+                            # print("itlastdate first : " + ITLastDate)
                             
                             dates_arr = ITLastDate.split("|")
                             dates_arr = [x for x in dates_arr if x != '']
@@ -188,9 +199,17 @@ class ClinicalView(views.APIView):
                             # index = dates.index(recent_date)
                             
                             ITLastDate = recent_date
+                            # ITLastDate = ITLastDate_lt
                             
-                            print(dates_arr)
-                            print(recent_date)
+                            # print("itlastdate second : " + ITLastDate)
+                            
+                            # if Date_701 == "" and Date_703 == "" and Date_705 == "" and Date_707 == "" and Date_721 == "" and Date_723 == "" and Date_732 == "" :
+                            #     ITLastDate = ""
+                                
+                            # ITLastDate = ""
+                            
+                            # print(dates_arr)
+                            # print(recent_date)
                             # print(index)
                             
                             # End ITEMNO split and check condition
@@ -203,6 +222,7 @@ class ClinicalView(views.APIView):
                             Systolic = ""
                             Diastolic = ""
                             BLOODPRESSUREDate = ""
+                            BPLastDate = ""
                         else:
                             BLOODPRESSURE_str_arr = BLOODPRESSURE_str.split("@")
                             BLOODPRESSURE_str1_split = BLOODPRESSURE_str_arr[0]
@@ -236,6 +256,7 @@ class ClinicalView(views.APIView):
                             Weight = ""
                             BMI = ""
                             BMIDate = ""
+                            BMILastDate = ""
                         else:
                             BMI_str_arr = BMI_str.split("#")
                             BMI_str1 = BMI_str_arr[0]
@@ -267,6 +288,7 @@ class ClinicalView(views.APIView):
                         if "-," in GLUCOSE_str:
                             Glucose = ""
                             GLUCOSEDate = ""
+                            GLLastDate = ""
                         else:
                             GLUCOSE_str_arr = GLUCOSE_str.split(" ,")
                             GLUCOSE_str1 = GLUCOSE_str_arr[0]
@@ -294,6 +316,7 @@ class ClinicalView(views.APIView):
                         if "-," in HBA1C_str:
                             HBA1C = ""
                             HBA1CDate = ""
+                            HBLastDate = ""
                         else:
                             HBA1C_str_arr = HBA1C_str.split(" ,")
                             HBA1C_str1 = HBA1C_str_arr[0]
@@ -312,6 +335,7 @@ class ClinicalView(views.APIView):
                                 HBLastDate = HBA1CDate
                             else:
                                 HBLastDate = ""
+                                
                         # End HBA1C split and check condition
                         
                         
@@ -325,6 +349,7 @@ class ClinicalView(views.APIView):
                             Triglyceride = ""
                             Ratio = ""
                             CHELOSTROLDate = ""
+                            CHLastDate = ""
                         else:
                             CHELOSTROL_str_arr = CHELOSTROL_str.split(",")
                             CHELOSTROL_str1 = CHELOSTROL_str_arr[0]
@@ -409,6 +434,7 @@ class ClinicalView(views.APIView):
                                 "723" : Date_723,
                                 "732" : Date_732,
                                 "lastDate": ITLastDate,
+                                # "lastDate": ITLastDate_lt,
                             },
                             'BloodPressure': {
                                 "Systolic" : Systolic,

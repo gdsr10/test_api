@@ -32,7 +32,8 @@ class FollowUpView(views.APIView):
             
             with connection.cursor() as cursor:
                 # Execute an SQL query to fetch the user with matching credentials
-                query = f"SELECT sum( A.BOOKED_APTS ) as ana_booked1, sum( A.FUTURE_APTS) as ana_followup1 FROM analytics_{LOCATIONID} A WHERE A.ANADATE >= %s AND A.ANADATE <= %s AND A.BOOKED_APTS>0 AND A.USERID = %s "
+                # second row divide by first row (*100)
+                query = f"SELECT sum( A.BOOKED_APTS ) as ana_booked1, sum( A.FUTURE_APTS) as ana_followup1, ( sum( A.FUTURE_APTS) / sum( A.BOOKED_APTS ) * 100 ) as percentage FROM analytics_{LOCATIONID} A WHERE A.ANADATE >= %s AND A.ANADATE <= %s AND A.BOOKED_APTS>0 AND A.USERID = %s "
                 cursor.execute(query, [FROMDATE, TODATE, USERID])
                 
                 # print(cursor.execute(query, [APTDATE, USERID]))
@@ -46,8 +47,9 @@ class FollowUpView(views.APIView):
                 
                 for row in rows:
                     row_data = {
-                        'AnaBooked1': row[0],
-                        'AnaFollowUp1': row[1],
+                        'AnaBooked1': int(row[0]),
+                        'AnaFollowUp1': int(row[1]),
+                        'Percentage': round(row[2]),
                     }
                     data.append(row_data)
 

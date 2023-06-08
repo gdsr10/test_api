@@ -27,7 +27,7 @@ class CredentialUpdateView(views.APIView):
         if headervalue == "y2s4pyj52nzr49jnuxxgqk5jtj28cj":
             
             UserID = request.data.get('id')
-            MAILID = request.data.get('mail_id')
+            USERNAME = request.data.get('username')
             PASSWORD = request.data.get('password')
             
             # print(UserID)
@@ -43,7 +43,7 @@ class CredentialUpdateView(views.APIView):
                     # Perform the condition check here
                     if user[0]:
                         # Execute an SQL query to update the user data
-                        cursor.execute("UPDATE admin_users SET FIELD_MAILID = %s, FIELD_PASSWORD = %s WHERE ID = %s", [MAILID, PASSWORD, UserID])
+                        cursor.execute("UPDATE admin_users SET FIELD_USERNAME = %s, FIELD_PASSWORD = %s WHERE ID = %s", [USERNAME, PASSWORD, UserID])
 
                         # Return a success message
                         data = {
@@ -52,8 +52,8 @@ class CredentialUpdateView(views.APIView):
                             'Success': 'True',
                             'data': [
                                 {
-                                    'MailId': user[2],
-                                    'Password': user[4]
+                                    'Username': USERNAME,
+                                    'Password': PASSWORD
                                 }
                             ]
                         }

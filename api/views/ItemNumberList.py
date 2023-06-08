@@ -49,8 +49,8 @@ class ItemNumberListView(views.APIView):
                     row_data = {
                         'AnaItemNum': row[0],
                         'AnaCount': row[1],
-                        'AnaBillings': row[2],
-                        'UserId': row[3],
+                        'AnaBillings': int(row[2]),
+                        # 'UserId': row[3],
                     }
                     data.append(row_data)
 

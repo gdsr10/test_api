@@ -68,7 +68,7 @@ class PredictorView(views.APIView):
                     
                     anaBooked = int(row[0])
                     anaFree = int(row[1])
-                    anaAverage = int(row[2])
+                    anaAverage = row[2]
                     
                     if anaBooked < 0 :
                         anaBooked = 0
@@ -92,12 +92,12 @@ class PredictorView(views.APIView):
                     
                     row_data = {
                         'Appointments': anaBooked,
-                        'PerPatientAverage': format(anaAverage, ".2f"),
-                        'TotalEarnings': format(EARNINGS),
-                        '%': format(EARNINGS, ".2f"),
-                        '%_Appointments': format(BOOKEDOUT, ".0f"),
-                        '%_PerPatientAverage': format(AVGOUT, ".2f"),
-                        '%_TotalEarnings': format(EARNINGOUT),
+                        'PerPatientAverage': round(anaAverage, 2),
+                        'TotalEarnings': round(EARNINGS),
+                        '%': round(EARNINGS, 2),
+                        '%_Appointments': round(BOOKEDOUT),
+                        '%_PerPatientAverage': round(AVGOUT, 2),
+                        '%_TotalEarnings': round(EARNINGOUT),
                     }
                     
                     # print(anaBooked)

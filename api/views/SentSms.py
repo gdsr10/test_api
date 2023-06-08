@@ -45,7 +45,7 @@ class SentSmsView(views.APIView):
                 print(query)
                 cursor.execute(query)
                 
-                rtnmsg = self.send_otp_to_mobile(MobileNo, Text)
+                rtnmsg = self.send_otp_to_mobile(MobileNo, Text, LoctnId)
                 
                 if "success" == rtnmsg :
                         data = {
@@ -71,7 +71,7 @@ class SentSmsView(views.APIView):
             return JsonResponse({'Message': 'Authenticate Failed', 'Status':401, 'Success': 'False'}, status=401)
         
     
-    def send_otp_to_mobile(self, mobile_number, text):
+    def send_otp_to_mobile(self, mobile_number, text, locid):
         
         # Implement your code to send the OTP to the mobile number using Burst SMS
         # Make sure to configure Burst SMS credentials in your Django settings
@@ -83,7 +83,7 @@ class SentSmsView(views.APIView):
         
         with connection.cursor() as cursor:
                 # Execute an SQL query to check if the user exists and meets a condition
-                cursor.execute("SELECT SMSNAME, burstsmsapikey, burstsmssecretkey FROM locationdetails")
+                cursor.execute("SELECT SMSNAME, burstsmsapikey, burstsmssecretkey FROM locationdetails WHERE LOCATIONID = %s", [locid])
                 datadet = cursor.fetchone()
                 
                 if datadet :

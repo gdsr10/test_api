@@ -50,14 +50,14 @@ class PaymentModuleView(views.APIView):
                 
                 for row in rows:
                     row_data = {
-                        'AnaLocation': row[2],
-                        'Private': row[1],
-                        'Medicare': row[2],
-                        'Dva': row[3],
-                        'Others': row[4],
-                        'Gst': row[5],
-                        'Total': row[6],
-                        'UserId': row[7],
+                        # 'AnaLocation': row[2],
+                        'Private': int(row[1]),
+                        'Medicare': int(row[2]),
+                        'Dva': int(row[3]),
+                        'Others': int(row[4]),
+                        'Gst': int(row[5]),
+                        'Total': int(row[6]),
+                        # 'UserId': row[7],
                     }
                     data.append(row_data)
 
