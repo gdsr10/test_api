@@ -4,6 +4,7 @@ from rest_framework import views
 from django.db import connection
 from django.http import JsonResponse
 
+import re
 from datetime import datetime, timedelta
 
 class ClinicalView(views.APIView):
@@ -34,7 +35,7 @@ class ClinicalView(views.APIView):
             with connection.cursor() as cursor:
             
                 # Execute an SQL query to fetch the user with matching credentials
-                query = f"SELECT * FROM sidebar_{LOCATIONID} WHERE ID ='{ID}'"
+                query = f"SELECT * FROM sidebar_{LOCATIONID} WHERE APPTID ='{ID}'"
             
                 cursor.execute(query)
             
@@ -54,8 +55,7 @@ class ClinicalView(views.APIView):
                 
                         HAD_MDP_MP = HAD + " " + MDP + " " + MP
                 
-                
-                        # Start ITEMNO split and check condition
+                        # # Start ITEMNO split and check condition
                         ITEMNO_str = str(row[18])
                 
                         if "######" in ITEMNO_str:
@@ -83,9 +83,6 @@ class ClinicalView(views.APIView):
                             Date_721 = ITEMNO_str5
                             Date_723 = ITEMNO_str6
                             Date_732 = ITEMNO_str7
-                            
-                            # dates = [Date_701, Date_703, Date_705,Date_707,Date_721,Date_723,Date_732]
-                            # print(dates)
                             
                             # ITLastDate = ""
                             ITLastDate_lt = ""
@@ -195,27 +192,21 @@ class ClinicalView(views.APIView):
                             dates_arr = ITLastDate.split("|")
                             dates_arr = [x for x in dates_arr if x != '']
                             dates = [datetime.strptime(date_str, "%Y-%m-%d").date() for date_str in dates_arr]
-                            recent_date = max(dates)
+                            if len(dates) > 0:
+                                recent_date = max(dates)
+                            else:
+                                recent_date = ""
+                            # print(dates)
+                            # recent_date = max(dates)
                             # index = dates.index(recent_date)
                             
                             ITLastDate = recent_date
-                            # ITLastDate = ITLastDate_lt
-                            
-                            # print("itlastdate second : " + ITLastDate)
-                            
-                            # if Date_701 == "" and Date_703 == "" and Date_705 == "" and Date_707 == "" and Date_721 == "" and Date_723 == "" and Date_732 == "" :
-                            #     ITLastDate = ""
-                                
                             # ITLastDate = ""
                             
-                            # print(dates_arr)
-                            # print(recent_date)
-                            # print(index)
-                            
-                            # End ITEMNO split and check condition
+                        #     # End ITEMNO split and check condition
                 
                 
-                        # Start BLOODPRESSURE split and check condition
+                        # # Start BLOODPRESSURE split and check condition
                         BLOODPRESSURE_str = str(row[21])
                         
                         if "-@" in BLOODPRESSURE_str:
@@ -235,20 +226,33 @@ class ClinicalView(views.APIView):
                             BLOODPRESSUREDate = BLOODPRESSURE_str2
                             # print(BLOODPRESSUREDate)
                             # BPLastDate = ""
-                            BP_from_date_str = one_year_ago.strftime("%d-%m-%Y")
-                            BP_from_date = datetime.strptime(BP_from_date_str, "%d-%m-%Y")
-                            BP_to_date = datetime.strptime(BLOODPRESSUREDate, "%d-%m-%Y")
-                            # Calculate the difference between the dates
-                            difference2 = BP_from_date - BP_to_date
-                            # Check if the difference is less than or equal to 365 days
-                            if difference2 <= timedelta(days=365):
-                                BPLastDate = BLOODPRESSUREDate
-                            else:
-                                BPLastDate = ""
-                        # End BLOODPRESSURE split and check condition
+                            expected_format = r"\d{2}-\d{2}-\d{4}"
+                            if re.fullmatch(expected_format, BLOODPRESSUREDate):
+                                BP_from_date_str = one_year_ago.strftime("%d-%m-%Y")
+                                BP_from_date = datetime.strptime(BP_from_date_str, "%d-%m-%Y")
+                                BP_to_date = datetime.strptime(BLOODPRESSUREDate, "%d-%m-%Y")
+                                # Calculate the difference between the dates
+                                difference2 = BP_from_date - BP_to_date
+                                # Check if the difference is less than or equal to 365 days
+                                if difference2 <= timedelta(days=365):
+                                    BPLastDate = BLOODPRESSUREDate
+                                else:
+                                    BPLastDate = ""
+                            else :
+                                BP_from_date_str = one_year_ago.strftime("%Y-%m-%d %H:%M:%S.%f")
+                                BP_from_date = datetime.strptime(BP_from_date_str, "%Y-%m-%d %H:%M:%S.%f")
+                                BP_to_date = datetime.strptime(BLOODPRESSUREDate, "%Y-%m-%d %H:%M:%S.%f")
+                                # Calculate the difference between the dates
+                                difference2 = BP_from_date - BP_to_date
+                                # Check if the difference is less than or equal to 365 days
+                                if difference2 <= timedelta(days=365):
+                                    BPLastDate = BLOODPRESSUREDate
+                                else:
+                                    BPLastDate = ""
+                        # # End BLOODPRESSURE split and check condition
                         
                         
-                        # Start BMI split and check condition
+                        # # Start BMI split and check condition
                         BMI_str = str(row[22])
                         
                         if "-#" in BMI_str:
@@ -267,21 +271,35 @@ class ClinicalView(views.APIView):
                             Weight = BMI_str2
                             BMI = BMI_str3
                             BMIDate = BMI_str4
-                            BMI_from_date_str = one_year_ago.strftime("%d-%m-%Y")
-                            BMI_from_date = datetime.strptime(BMI_from_date_str, "%d-%m-%Y")
-                            BMI_to_date = datetime.strptime(BMIDate, "%d-%m-%Y")
-                            # Calculate the difference between the dates
-                            difference3 = BMI_from_date - BMI_to_date
-                            # print(difference)
-                            # Check if the difference is less than or equal to 365 days
-                            if difference3 <= timedelta(days=365):
-                                BMILastDate = BMIDate
-                            else:
-                                BMILastDate = ""
-                        # End BMI split and check condition
+                            expected_format = r"\d{2}-\d{2}-\d{4}"
+                            if re.fullmatch(expected_format, BMIDate):
+                                BMI_from_date_str = one_year_ago.strftime("%d-%m-%Y")
+                                BMI_from_date = datetime.strptime(BMI_from_date_str, "%d-%m-%Y")
+                                BMI_to_date = datetime.strptime(BMIDate, "%d-%m-%Y")
+                                # Calculate the difference between the dates
+                                difference3 = BMI_from_date - BMI_to_date
+                                # print(difference)
+                                # Check if the difference is less than or equal to 365 days
+                                if difference3 <= timedelta(days=365):
+                                    BMILastDate = BMIDate
+                                else:
+                                    BMILastDate = ""
+                            else :
+                                BMI_from_date_str = one_year_ago.strftime("%Y-%m-%d %H:%M:%S.%f")
+                                BMI_from_date = datetime.strptime(BMI_from_date_str, "%Y-%m-%d %H:%M:%S.%f")
+                                BMI_to_date = datetime.strptime(BMIDate, "%Y-%m-%d %H:%M:%S.%f")
+                                # Calculate the difference between the dates
+                                difference3 = BMI_from_date - BMI_to_date
+                                # print(difference)
+                                # Check if the difference is less than or equal to 365 days
+                                if difference3 <= timedelta(days=365):
+                                    BMILastDate = BMIDate
+                                else:
+                                    BMILastDate = ""
+                        # # End BMI split and check condition
                         
                         
-                        # Start GLUCOSE split and check condition
+                        # # Start GLUCOSE split and check condition
                         GLUCOSE_str = str(row[24])
                         
                         
@@ -296,21 +314,35 @@ class ClinicalView(views.APIView):
                             Glucose = GLUCOSE_str1
                             GLUCOSEDate = GLUCOSE_str2
                             # print(GLUCOSEDate)
-                            GL_from_date_str = one_year_ago.strftime("%d-%m-%Y")
-                            GL_from_date = datetime.strptime(GL_from_date_str, "%d-%m-%Y")
-                            GL_to_date = datetime.strptime(GLUCOSEDate, "%d-%m-%Y")
-                            # Calculate the difference between the dates
-                            difference4 = GL_from_date - GL_to_date
-                            # print(difference4)
-                            # Check if the difference is less than or equal to 365 days
-                            if difference4 <= timedelta(days=365):
-                                GLLastDate = GLUCOSEDate
-                            else:
-                                GLLastDate = ""
-                        # End GLUCOSE split and check condition
+                            expected_format = r"\d{2}-\d{2}-\d{4}"
+                            if re.fullmatch(expected_format, GLUCOSEDate):
+                                GL_from_date_str = one_year_ago.strftime("%d-%m-%Y")
+                                GL_from_date = datetime.strptime(GL_from_date_str, "%d-%m-%Y")
+                                GL_to_date = datetime.strptime(GLUCOSEDate, "%d-%m-%Y")
+                                # Calculate the difference between the dates
+                                difference4 = GL_from_date - GL_to_date
+                                # print(difference4)
+                                # Check if the difference is less than or equal to 365 days
+                                if difference4 <= timedelta(days=365):
+                                    GLLastDate = GLUCOSEDate
+                                else:
+                                    GLLastDate = ""
+                            else :
+                                    GL_from_date_str = one_year_ago.strftime("%Y-%m-%d %H:%M:%S.%f")
+                                    GL_from_date = datetime.strptime(GL_from_date_str, "%Y-%m-%d %H:%M:%S.%f")
+                                    GL_to_date = datetime.strptime(GLUCOSEDate, "%Y-%m-%d %H:%M:%S.%f")
+                                    # Calculate the difference between the dates
+                                    difference4 = GL_from_date - GL_to_date
+                                    # print(difference4)
+                                    # Check if the difference is less than or equal to 365 days
+                                    if difference4 <= timedelta(days=365):
+                                        GLLastDate = GLUCOSEDate
+                                    else:
+                                        GLLastDate = ""
+                        # # End GLUCOSE split and check condition
                         
                         
-                        # Start HBA1C split and check condition
+                        # # Start HBA1C split and check condition
                         HBA1C_str = str(row[25])
                         
                         if "-," in HBA1C_str:
@@ -324,22 +356,36 @@ class ClinicalView(views.APIView):
                             HBA1C = HBA1C_str1
                             HBA1CDate = HBA1C_str2
                             # print(HBA1CDate)
-                            HB_from_date_str = one_year_ago.strftime("%d-%m-%Y")
-                            HB_from_date = datetime.strptime(HB_from_date_str, "%d-%m-%Y")
-                            HB_to_date = datetime.strptime(HBA1CDate, "%d-%m-%Y")
-                            # Calculate the difference between the dates
-                            difference5 = HB_from_date - HB_to_date
-                            # print(difference5)
-                            # Check if the difference is less than or equal to 365 days
-                            if difference5 <= timedelta(days=365):
-                                HBLastDate = HBA1CDate
-                            else:
-                                HBLastDate = ""
+                            expected_format = r"\d{2}-\d{2}-\d{4}"
+                            if re.fullmatch(expected_format, HBA1CDate):
+                                HB_from_date_str = one_year_ago.strftime("%d-%m-%Y")
+                                HB_from_date = datetime.strptime(HB_from_date_str, "%d-%m-%Y")
+                                HB_to_date = datetime.strptime(HBA1CDate, "%d-%m-%Y")
+                                # Calculate the difference between the dates
+                                difference5 = HB_from_date - HB_to_date
+                                # print(difference5)
+                                # Check if the difference is less than or equal to 365 days
+                                if difference5 <= timedelta(days=365):
+                                    HBLastDate = HBA1CDate
+                                else:
+                                    HBLastDate = ""
+                            else :
+                                HB_from_date_str = one_year_ago.strftime("%Y-%m-%d %H:%M:%S.%f")
+                                HB_from_date = datetime.strptime(HB_from_date_str, "%Y-%m-%d %H:%M:%S.%f")
+                                HB_to_date = datetime.strptime(HBA1CDate, "%Y-%m-%d %H:%M:%S.%f")
+                                # Calculate the difference between the dates
+                                difference5 = HB_from_date - HB_to_date
+                                # print(difference5)
+                                # Check if the difference is less than or equal to 365 days
+                                if difference5 <= timedelta(days=365):
+                                    HBLastDate = HBA1CDate
+                                else:
+                                    HBLastDate = ""
                                 
-                        # End HBA1C split and check condition
+                        # # End HBA1C split and check condition
                         
                         
-                        # Start CHELOSTROL split and check condition
+                        # # Start CHELOSTROL split and check condition
                         CHELOSTROL_str = str(row[23])
                         
                         if "-," in CHELOSTROL_str:
@@ -352,59 +398,73 @@ class ClinicalView(views.APIView):
                             CHLastDate = ""
                         else:
                             CHELOSTROL_str_arr = CHELOSTROL_str.split(",")
-                            CHELOSTROL_str1 = CHELOSTROL_str_arr[0]
-                            CHELOSTROL_str2 = CHELOSTROL_str_arr[1]
-                            CHELOSTROL_str3 = CHELOSTROL_str_arr[2]
-                            CHELOSTROL_str4 = CHELOSTROL_str_arr[3]
-                            CHELOSTROL_str5 = CHELOSTROL_str_arr[4]
-                            CHELOSTROL_str6 = CHELOSTROL_str_arr[5]
-                            Cholestrol = CHELOSTROL_str1
-                            HDL = CHELOSTROL_str2
-                            LDL = CHELOSTROL_str3
-                            Triglyceride = CHELOSTROL_str4
-                            Ratio = CHELOSTROL_str5
-                            CHELOSTROLDate = CHELOSTROL_str6
-                            # print(CHELOSTROLDate)
-                            CH_from_date_str = one_year_ago.strftime("%d-%m-%Y")
-                            CH_from_date = datetime.strptime(CH_from_date_str, "%d-%m-%Y")
-                            CH_to_date = datetime.strptime(CHELOSTROLDate, "%d-%m-%Y")
-                            # Calculate the difference between the dates
-                            difference6 = CH_from_date - CH_to_date
-                            # print(difference6)
-                            # Check if the difference is less than or equal to 365 days
-                            if difference6 <= timedelta(days=365):
-                                CHLastDate = CHELOSTROLDate
-                            else:
-                                CHLastDate = ""
-                        # End CHELOSTROL split and check condition
+                            if len(CHELOSTROL_str_arr) >= 6:
+                                CHELOSTROL_str1 = CHELOSTROL_str_arr[0]
+                                CHELOSTROL_str2 = CHELOSTROL_str_arr[1]
+                                CHELOSTROL_str3 = CHELOSTROL_str_arr[2]
+                                CHELOSTROL_str4 = CHELOSTROL_str_arr[3]
+                                CHELOSTROL_str5 = CHELOSTROL_str_arr[4]
+                                CHELOSTROL_str6 = CHELOSTROL_str_arr[5]
+                                Cholestrol = CHELOSTROL_str1
+                                HDL = CHELOSTROL_str2
+                                LDL = CHELOSTROL_str3
+                                Triglyceride = CHELOSTROL_str4
+                                Ratio = CHELOSTROL_str5
+                                CHELOSTROLDate = CHELOSTROL_str6
+                                # print(CHELOSTROLDate)
+                                expected_format = r"\d{2}-\d{2}-\d{4}"
+                                if re.fullmatch(expected_format, CHELOSTROLDate):
+                                    CH_from_date_str = one_year_ago.strftime("%d-%m-%Y")
+                                    CH_from_date = datetime.strptime(CH_from_date_str, "%d-%m-%Y")
+                                    CH_to_date = datetime.strptime(CHELOSTROLDate, "%d-%m-%Y")
+                                    # Calculate the difference between the dates
+                                    difference6 = CH_from_date - CH_to_date
+                                    # print(difference6)
+                                    # Check if the difference is less than or equal to 365 days
+                                    if difference6 <= timedelta(days=365):
+                                        CHLastDate = CHELOSTROLDate
+                                    else:
+                                        CHLastDate = ""
+                                else :
+                                    CH_from_date_str = one_year_ago.strftime("%Y-%m-%d %H:%M:%S.%f")
+                                    CH_from_date = datetime.strptime(CH_from_date_str, "%Y-%m-%d %H:%M:%S.%f")
+                                    CH_to_date = datetime.strptime(CHELOSTROLDate, "%Y-%m-%d %H:%M:%S.%f")
+                                    # Calculate the difference between the dates
+                                    difference6 = CH_from_date - CH_to_date
+                                    # print(difference6)
+                                    # Check if the difference is less than or equal to 365 days
+                                    if difference6 <= timedelta(days=365):
+                                        CHLastDate = CHELOSTROLDate
+                                    else:
+                                        CHLastDate = ""
+                        # # End CHELOSTROL split and check condition
                         
                         
                         # Start ALCOHOL split and check condition
                         ALCOHOL_str = str(row[27])
                         
-                        if "-" in ALCOHOL_str:
+                        if "-," in ALCOHOL_str:
                             ALCOHOL = ""
                             Days_Per_Week = ""
                             Drinks_Per_Day = ""
                         else:
-                            ALCOHOL_str_arr = ALCOHOL_str.split("|")
-                            ALCOHOL_str1 = ALCOHOL_str_arr[0]
-                            ALCOHOL = ALCOHOL_str1
-                            ALCOHOL_str2_split = ALCOHOL_str_arr[1]
-                            ALCOHOL_str2_split_arr = ALCOHOL_str2_split.split(",")
-                            ALCOHOL_str2_split_1 = ALCOHOL_str2_split_arr[0]
-                            Days_Per_Week = ALCOHOL_str2_split_1
-                            ALCOHOL_str2_split_2 = ALCOHOL_str2_split_arr[1]
-                            Drinks_Per_Day = ALCOHOL_str2_split_2
+                            if "|" in ALCOHOL_str :
+                                ALCOHOL_str_arr = ALCOHOL_str.split("|")
+                                ALCOHOL_str1 = ALCOHOL_str_arr[0]
+                                ALCOHOL = ALCOHOL_str1
+                                ALCOHOL_str2_split = ALCOHOL_str_arr[1]
+                                ALCOHOL_str2_split_arr = ALCOHOL_str2_split.split(",")
+                                ALCOHOL_str2_split_1 = ALCOHOL_str2_split_arr[0]
+                                Days_Per_Week = ALCOHOL_str2_split_1
+                                ALCOHOL_str2_split_2 = ALCOHOL_str2_split_arr[1]
+                                Drinks_Per_Day = ALCOHOL_str2_split_2
+                            else:
+                                ALCOHOL_str_arr = ALCOHOL_str.split(",")
+                                ALCOHOL_str1 = ALCOHOL_str_arr[0]
+                                ALCOHOL = ALCOHOL_str1
+                                Days_Per_Week = ALCOHOL_str_arr[1]
+                                Drinks_Per_Day = ALCOHOL_str_arr[2]
                         # End ALCOHOL split and check condition
-                        
-                        # print(ITEMNO)
-                        # print(BLOODPRESSURE_str)
-                        # print(BMI)
-                        # print(GLUCOSE_str)
-                        # print(HBA1C_str)
-                        # print(CHELOSTROL_str)
-                        # print(ALCOHOL_str)
                         
                         row_data = {
                             'Id': row[0],
@@ -480,7 +540,7 @@ class ClinicalView(views.APIView):
                             'WMobile': row[31],
                             'MPhone': row[32],
                             'InvoiceStatus': row[33],
-                            'LastItemNo': row[34],
+                            # 'LastItemNo': row[34],
                         }
                         
                         data.append(row_data)

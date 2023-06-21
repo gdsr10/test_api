@@ -1,0 +1,23 @@
+# ITLastDate = ITLastDate_lt
+                            
+                            # print("itlastdate second : " + ITLastDate)
+                            
+                            # if Date_701 == "" and Date_703 == "" and Date_705 == "" and Date_707 == "" and Date_721 == "" and Date_723 == "" and Date_732 == "" :
+                            #     ITLastDate = ""
+                                
+                            # ITLastDate = ""
+                            
+                            # print(dates_arr)
+                            # print(recent_date)
+                            # print(index)
+
+
+
+                        # print(ITEMNO)
+                        # print(BLOODPRESSURE_str)
+                        # print(BMI)
+                        # print(GLUCOSE_str)
+                        # print(HBA1C_str)
+                        # print(CHELOSTROL_str)
+                        # print(ALCOHOL_str)
+                        
