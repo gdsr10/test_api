@@ -85,28 +85,28 @@ DATABASES = {
     #     'ENGINE': 'django.db.backends.sqlite3',
     #     'NAME': BASE_DIR / 'db.sqlite3',
     # }
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.mysql',
-    #     'NAME': 'ztest_ztest',
-    #     'USER': 'test',
-    #     'PASSWORD': 'lLJsm7Yxy3qol4oB',
-    #     'HOST': '101.0.71.54',
-    #     'PORT': '',
-    #     'OPTIONS': {
-    #         'init_command': 'SET foreign_key_checks = 0;',
-    #     },
-    # }
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'spect_codd_ana',
-        'USER': 'codd_user',
-        'PASSWORD': '@creation99P',
-        'HOST': '139.99.144.1',
+        'NAME': 'ztest_ztest',
+        'USER': 'test',
+        'PASSWORD': 'lLJsm7Yxy3qol4oB',
+        'HOST': '101.0.71.54',
         'PORT': '',
         'OPTIONS': {
             'init_command': 'SET foreign_key_checks = 0;',
         },
     }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'NAME': 'spect_codd_ana',
+    #     'USER': 'codd_user',
+    #     'PASSWORD': '@creation99P',
+    #     'HOST': '139.99.144.1',
+    #     'PORT': '',
+    #     'OPTIONS': {
+    #         'init_command': 'SET foreign_key_checks = 0;',
+    #     },
+    # }
 }
 
 

@@ -11,6 +11,10 @@ from random import randint
 import requests
 from django.conf import settings
 
+import requests
+import base64
+
+
 class SentSmsView(views.APIView):
     """ API view to Sidebar List records Data """
     
@@ -42,7 +46,7 @@ class SentSmsView(views.APIView):
             with connection.cursor() as cursor:
                 # Execute an SQL query to check if the user exists and meets a condition
                 query = f"INSERT INTO sent_sms (reference_id,location_id,user_id,mobile,text,created_by,created_date) VALUES ('{RefNo}','{LoctnId}','{UsrId}','{MobileNo}','{Text}','{CrtBy}','{CrtDt}')"
-                print(query)
+                # print(query)
                 cursor.execute(query)
                 
                 rtnmsg = self.send_otp_to_mobile(MobileNo, Text, LoctnId)
@@ -101,31 +105,35 @@ class SentSmsView(views.APIView):
                 
                 # url = 'http://burst.transmitsms.com/register?aff_id=120509'
                 # payload={}
-                headers = {
-                'Authorization': 'Basic YzQzNGIyYjk5YTMwNzM5YjJiNmIzNmE3YzNkZTFlYzk6QW1oZXJzdDIwMjE='
-                }
+                # headers = {
+                # 'Authorization': 'Basic YzQzNGIyYjk5YTMwNzM5YjJiNmIzNmE3YzNkZTFlYzk6QW1oZXJzdDIwMjE='
+                # }
                 # payload='message=This%20is%20my%20message%2C%20click%20on%20my%20link%20%5Btracked-link%5D&list_id=4070887&from=61434008437&tracked_link_url=https%3A%2F%2Fwww.twitter.com%2Ftransmitsms'
                 # headers = {}
                 message = f"Your text is: {text}"
                 mob_no = "91" + mobile_number
-                data = {
-                    'message': message,
-                    'to': mob_no,
-                    'from': burst_sender_id,
-                    'api_key': burst_api_key,
-                    'api_secret': burst_api_secret
-                } 
+                # data = {
+                #     'message': message,
+                #     'to': mob_no,
+                #     'from': burst_sender_id,
+                #     'api_key': burst_api_key,
+                #     'api_secret': burst_api_secret
+                # } 
                 
                 url = f'https://api.transmitsms.com/send-sms.json?message={message}&from={burst_sender_id}&to={mob_no}'
                 
-                print(data)
+                # print(data)
                 print(url)
+                
+                # Set the basic authorization header in the email message
+                encoded_credentials = base64.b64encode(f"{burst_api_key}:{burst_api_secret}".encode('utf-8')).decode('utf-8')
+                headers = {'Authorization': f'Basic {encoded_credentials}'}
                 
                 # response = requests.request("POST", url, headers=headers, data=data)
                 response = requests.post(url, headers=headers)
                 
                 print(response)
-                print(response.json)
+                # print(response.json)
             
                 if response.status_code == 200:
                     print("SMS sent successfully")
