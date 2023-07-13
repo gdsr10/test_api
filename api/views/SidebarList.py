@@ -32,7 +32,7 @@ class SidebarListView(views.APIView):
             with connection.cursor() as cursor:
                 # Execute an SQL query to fetch the user with matching credentials
                 query = f"SELECT PNTNAME,APTTIME,APPTID,HAD,MPD,MP,ID,PNTDOB FROM sidebar_{LOCATIONID} WHERE DATE(APTDATE) = '{APTDATE}' AND USERID = {USERID} AND RECORDSTATUS ='1' ORDER BY APTTIME"
-                print(query)
+                # print(query)
                 cursor.execute(query)
                 # cursor.execute(query, [APTDATE, USERID])
                 
