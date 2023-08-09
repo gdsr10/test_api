@@ -31,7 +31,7 @@ class SidebarListView(views.APIView):
             
             with connection.cursor() as cursor:
                 # Execute an SQL query to fetch the user with matching credentials
-                query = f"SELECT PNTNAME,APTTIME,APPTID,HAD,MPD,MP,ID,PNTDOB FROM sidebar_{LOCATIONID} WHERE DATE(APTDATE) = '{APTDATE}' AND USERID = {USERID} AND RECORDSTATUS ='1' ORDER BY APTTIME"
+                query = f"SELECT PNTNAME,APTTIME,APPTID,HAD,MPD,MP,ID,PNTDOB,RECALL FROM sidebar_{LOCATIONID} WHERE DATE(APTDATE) = '{APTDATE}' AND USERID = {USERID} AND RECORDSTATUS ='1' ORDER BY APTTIME"
                 # print(query)
                 cursor.execute(query)
                 # cursor.execute(query, [APTDATE, USERID])
@@ -46,6 +46,14 @@ class SidebarListView(views.APIView):
                 data = []
                 
                 for row in rows:
+                    
+                    recall_column = row[8]
+                    
+                    if len(recall_column) > 2 :
+                        Recall = 1
+                    else :
+                        Recall = 0
+                        
                     row_data = {
                         'PntName': row[0],
                         'AptTime': row[1],
@@ -55,6 +63,7 @@ class SidebarListView(views.APIView):
                         'Mp': row[5],
                         'Id': row[6],
                         'PntDob': row[7],
+                        'Recall' : Recall,
                     }
                     data.append(row_data)
 

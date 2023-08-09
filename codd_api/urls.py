@@ -16,8 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 # from rest_framework.authtoken.views import obtain_auth_token
-from api.views import Login, CredentialUpdate, SidebarList, PaymentModule, ItemNumberList, FollowUp, Predictor
-from api.views import Clinical, MtaRecord, Layout, KPIData, ForgotPassword, OTPVerify, ShowStatus, SentSms , ContactDetails , Logout
+from api.views import Login, CredentialUpdate, SidebarList, PaymentModule, ItemNumberList, FollowUp, Predictor, Clinical, MtaRecord, Layout
+from api.views import KPIData, ForgotPassword, OTPVerify, ShowStatus, SentSms , ContactDetails , MBSReview, Logout
 
 
 urlpatterns = [
@@ -70,6 +70,9 @@ urlpatterns = [
     
     # API to post/ContactDetailsView Scheme
     path('api/contactdetails/', ContactDetails.ContactDetailsView.as_view()),
+    
+    # API to post/MBSReviewView Scheme
+    path('api/mbsreview/', MBSReview.MBSReviewView.as_view()),
     
     # API to post/LogoutView Scheme
     path('api/logout/', Logout.LogoutView.as_view()),
