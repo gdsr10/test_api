@@ -35,7 +35,8 @@ class PredictorView(views.APIView):
             TODATE = request.data.get('todate')
             USERID = request.data.get('user_id')
             LOCATIONID = request.data.get('location_id')
-            APTPRE = 90
+            APTPRE = request.data.get('apt_pre')
+            # APTPRE = 90
             PPAVG = 1
             
             with connection.cursor() as cursor:
@@ -81,7 +82,7 @@ class PredictorView(views.APIView):
                     EARNINGS = anaBooked * anaAverage
 
                     if APTPRE == "" :
-                        APTPRE = 90
+                        APTPRE = APTPRE
                         
                     if PPAVG == "" :
                         PPAVG = 1
