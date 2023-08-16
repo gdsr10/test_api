@@ -36,8 +36,9 @@ class PredictorView(views.APIView):
             USERID = request.data.get('user_id')
             LOCATIONID = request.data.get('location_id')
             APTPRE = request.data.get('apt_pre')
+            PPAVG = request.data.get('ppavg')
             # APTPRE = 90
-            PPAVG = 1
+            # PPAVG = 1
             
             with connection.cursor() as cursor:
                 
@@ -85,7 +86,7 @@ class PredictorView(views.APIView):
                         APTPRE = APTPRE
                         
                     if PPAVG == "" :
-                        PPAVG = 1
+                        PPAVG = PPAVG
                         
                     BOOKEDOUT = anaBooked * APTPRE / 100
                     AVGOUT = anaAverage + PPAVG

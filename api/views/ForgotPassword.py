@@ -117,7 +117,16 @@ class ForgotPasswordView(views.APIView):
                 # payload='message=This%20is%20my%20message%2C%20click%20on%20my%20link%20%5Btracked-link%5D&list_id=4070887&from=61434008437&tracked_link_url=https%3A%2F%2Fwww.twitter.com%2Ftransmitsms'
                 # headers = {}
                 message = f"Your OTP is: {otp}"
-                mob_no = "91" + mobile_number
+                # mob_no = "91" + mobile_number
+                
+                if mobile_number[:2] == "61":
+                    mob_no = mobile_number
+                elif mobile_number[:2] == "04":
+                    mob_no = "61" + mobile_number[1:]
+                    print(mob_no)
+                else:
+                    return "Error"
+                
                 data = {
                     'message': message,
                     'to': mob_no,
@@ -143,3 +152,4 @@ class ForgotPasswordView(views.APIView):
                 else:
                     print("SMS sending failed")
                     return "failure"
+                
