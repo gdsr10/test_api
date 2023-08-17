@@ -102,7 +102,7 @@ class OTPVerifyView(views.APIView):
                 'Authorization': 'Basic YzQzNGIyYjk5YTMwNzM5YjJiNmIzNmE3YzNkZTFlYzk6QW1oZXJzdDIwMjE='
                 }
 
-                message = f"Username : {mail_id} Password : {password}"
+                message = f"We have recovered your login credentials of Codd. Username: {mail_id} Password : {password}"
                 mob_no = "91" + mobile_number
                 
                 url = f'https://api.transmitsms.com/send-sms.json?message={message}&from={burst_sender_id}&to={mob_no}'

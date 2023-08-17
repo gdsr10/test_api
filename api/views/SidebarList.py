@@ -47,12 +47,40 @@ class SidebarListView(views.APIView):
                 
                 for row in rows:
                     
+                    HAD = row[3]
+                    MPD = row[4]
+                    MP = row[5]
+                    
                     recall_column = row[8]
                     
                     if len(recall_column) > 2 :
                         Recall = 1
                     else :
                         Recall = 0
+                        
+                    ColorCode = ''
+                    
+                    if HAD != '' or MPD != '' or MP != '':
+                        # YELLOW CONDITION
+                        if MP == 'MP':
+                            ColorCode = '#effb7b'
+                        # GREEN CONDITION
+                        elif HAD == 'HAD':
+                            ColorCode = '#58c18e'
+                        # DARK BLUE CONDITION
+                        elif MPD == 'MPD':
+                            ColorCode = '#143265'
+                        # LIGHT BLUE CONDITION
+                        elif MPD == 'MPR':
+                            ColorCode = '#9ccbff'
+                        else:
+                            # Default color in case none of the conditions match
+                            ColorCode = '#fbfbfb'
+                    else:
+                        # LIGHT BLUE CONDITION
+                        ColorCode = '#fbfbfb'
+                        
+                    # print(ColorCode)
                         
                     row_data = {
                         'PntName': row[0],
@@ -64,6 +92,7 @@ class SidebarListView(views.APIView):
                         'Id': row[6],
                         'PntDob': row[7],
                         'Recall' : Recall,
+                        'ColorCode' : ColorCode,
                     }
                     data.append(row_data)
 

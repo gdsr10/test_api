@@ -116,7 +116,7 @@ class ForgotPasswordView(views.APIView):
                 }
                 # payload='message=This%20is%20my%20message%2C%20click%20on%20my%20link%20%5Btracked-link%5D&list_id=4070887&from=61434008437&tracked_link_url=https%3A%2F%2Fwww.twitter.com%2Ftransmitsms'
                 # headers = {}
-                message = f"Your OTP is: {otp}"
+                message = f"Welcome to CODD Technologies Codd GP. Your One Time Password is : {otp}"
                 # mob_no = "91" + mobile_number
                 
                 if mobile_number[:2] == "61":
